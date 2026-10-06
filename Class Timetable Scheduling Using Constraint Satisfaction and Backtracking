@@ -1,0 +1,28 @@
+classes = input("Enter classes: ").split()
+slots = input("Enter time slots: ").split()
+rooms = input("Enter rooms: ").split()
+schedule = {}
+def valid(slot, room):
+    for s, r in schedule.values():
+        if slot == s and room == r:
+            return False
+    return True
+def solve(i=0):
+    if i == len(classes):
+        return True
+    c = classes[i]
+    for slot in slots:
+        for room in rooms:
+            if valid(slot, room):
+                schedule[c] = (slot, room)
+                if solve(i + 1):
+                    return True
+                del schedule[c]
+    return False
+if solve():
+    print("\nTIMETABLE")
+    print("Class\t\tTime\t\tRoom")
+    for c, (slot, room) in schedule.items():
+        print(f"{c}\t\t{slot}\t\t{room}")
+else:
+    print("\nNo valid timetable found.")
