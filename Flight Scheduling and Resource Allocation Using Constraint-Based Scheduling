@@ -1,0 +1,44 @@
+flights = [
+    {"flight": "F101", "aircraft": "A1", "crew": "C1", "departure": 8, "arrival": 10},
+    {"flight": "F102", "aircraft": "A2", "crew": "C2", "departure": 9, "arrival": 11},
+    {"flight": "F103", "aircraft": "A1", "crew": "C1", "departure": 11, "arrival": 13},
+    {"flight": "F104", "aircraft": "A2", "crew": "C2", "departure": 12, "arrival": 14}]
+
+maintenance = {
+    "A1": [10],
+    "A2": []
+}
+
+airport_capacity = 2
+scheduled = []
+used_slots = {}
+
+for flight in flights:
+    aircraft = flight["aircraft"]
+    departure = flight["departure"]
+    if departure in maintenance.get(aircraft, []):
+        print(flight["flight"], "not scheduled - Aircraft under maintenance")
+        continue
+    if used_slots.get(departure, 0) >= airport_capacity:
+        print(flight["flight"], "not scheduled - Airport capacity full")
+        continue
+    scheduled.append(flight)
+    used_slots[departure] = used_slots.get(departure, 0) + 1
+
+print("\n--- FINAL FLIGHT SCHEDULE ---")
+
+for flight in scheduled:
+    print(
+        flight["flight"],
+        "Aircraft:", flight["aircraft"],
+        "Crew:", flight["crew"],
+        "Departure:", flight["departure"],
+        "Arrival:", flight["arrival"]
+    )
+
+total_flights = len(flights)
+scheduled_flights = len(scheduled)
+utilization = (scheduled_flights / total_flights) * 100
+print("\nTotal flights:", total_flights)
+print("Scheduled flights:", scheduled_flights)
+print("Resource utilization:", utilization, "%")
