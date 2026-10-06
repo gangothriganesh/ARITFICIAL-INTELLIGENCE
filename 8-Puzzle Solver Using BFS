@@ -1,0 +1,44 @@
+from collections import deque
+goal = [[1,2,3],
+        [4,5,6],
+        [7,8,0]]
+def find_zero(s):
+    for i in range(3):
+        for j in range(3):
+            if s[i][j] == 0:
+                return i, j
+
+def moves(s):
+    x, y = find_zero(s)
+    directions = [(1,0), (-1,0), (0,1), (0,-1)]
+    result = []
+
+    for dx, dy in directions:
+        nx, ny = x + dx, y + dy
+        if 0 <= nx < 3 and 0 <= ny < 3:
+            temp = [row[:] for row in s]
+            temp[x][y], temp[nx][ny] = temp[nx][ny], temp[x][y]
+            result.append(temp)
+    return result
+
+print("Enter Initial State:")
+start = [list(map(int, input().split())) for _ in range(3)]
+
+queue = deque()
+queue.append(start)
+visited = []
+visited.append(start)
+
+while queue:
+    state = queue.popleft()
+    if state == goal:
+        print("Goal State Reached")
+        for row in goal:
+            print(*row)
+        break
+    for nxt in moves(state):
+        if nxt not in visited:
+            visited.append(nxt)
+            queue.append(nxt)
+else:
+    print("Goal State Not Reached")
