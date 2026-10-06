@@ -1,0 +1,39 @@
+import heapq
+graph = {
+    'A': [('B', 1), ('C', 4)],
+    'B': [('D', 2), ('E', 5)],
+    'C': [('F', 3)],
+    'D': [('G', 1)],
+    'E': [('G', 2)],
+    'F': [('G', 2)],
+    'G': []
+}
+
+start = input("Enter start node: ").upper()
+goal = input("Enter goal node: ").upper()
+h = {}
+for node in graph:
+    h[node] = int(input(f"Enter h({node}): "))
+
+def astar(start, goal):
+    pq = [(0, start)]
+    cost = {start: 0}
+    parent = {}
+    while pq:
+        _, u = heapq.heappop(pq)
+        if u == goal:
+            break
+        for v, w in graph[u]:
+            new = cost[u] + w
+            if v not in cost or new < cost[v]:
+                cost[v] = new
+                parent[v] = u
+                heapq.heappush(pq, (new + h[v], v))
+
+    path = [goal]
+    while path[-1] != start:
+        path.append(parent[path[-1]])
+    path.reverse()
+    print("Path:", " -> ".join(path))
+    print("Cost:", cost[goal])
+astar(start, goal)
